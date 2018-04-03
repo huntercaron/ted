@@ -14,17 +14,25 @@ class IndexPage extends React.Component {
 
     this.db = firebase.firestore();
 
-    this.db.collection("ted").get().then((querySnapshot) => {
+    this.db.collection("ted").where("index", "==", 1).get().then((querySnapshot) => {
       querySnapshot.forEach((doc) => {
-        console.log(`${doc.id} => ${doc.data()}`);
+        console.log(doc.data());
+        console.log(doc);
       });
     });
+
+    // var tedRef = this.db.collection("ted");
+
+    // let query = tedRef
+    // console.log(query);
+    
 
   }
 
   render() {
     return (
       <div>
+
       </div>
     )
   }

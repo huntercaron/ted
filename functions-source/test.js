@@ -3,7 +3,7 @@ const fs = require('fs');
 exports.handler = function (event, context, callback) {
   
 
-  fs.readdir('.', function (err, items) {
+  fs.readdir('../.', function (err, items) {
     console.log(items);
 
     let logs = [];

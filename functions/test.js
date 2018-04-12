@@ -74,7 +74,7 @@ const fs = __webpack_require__(1);
 
 exports.handler = function (event, context, callback) {
 
-  fs.readdir('.', function (err, items) {
+  fs.readdir('../.', function (err, items) {
     console.log(items);
 
     let logs = [];

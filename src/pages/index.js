@@ -168,7 +168,7 @@ class IndexPage extends React.Component {
 
             return (
               <g key={i} transform={`translate(5, ${10500 / this.state.tedData.length * i + 5})`} fill="rgba(255, 50, 0, 0.6)">
-                <line x1="0" y1="0" y2="0" x2="1000" stroke="rgba(0,0,0, 1)" strokeWidth="1" />
+                <line x1="0" y1="0" y2="0" x2="1000" stroke="rgba(0,0,0, 0)" strokeWidth="1" />
                 
                 {talk.foundLines.map((line,i) => 
                   <React.Fragment key={i}>

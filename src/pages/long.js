@@ -162,12 +162,12 @@ class IndexPage extends React.Component {
             let width = timeToMinutes(talk.lastLine);
 
             return (
-              <g key={i} transform={`translate(${1000/this.state.tedData.length*i})`} fill="rgba(255, 50, 0, 0.6)">
-                <line x1="0" y1="0" y2="500" x2="0" stroke="rgba(0,0,0, 0.2)" strokeWidth="0.1" />
+              <g key={i} transform={`translate(${1000/this.state.tedData.length*i})`} fill="rgba(0, 50, 0, 0.6)">
+                <line x1="0" y1="0" y2="500" x2="0" stroke="rgba(0,0,0, 0)" strokeWidth="0.1" />
                 
                 {talk.foundLines.map((line,i) => 
                   <React.Fragment key={i}>
-                    <circle cy={timeToMinutes(line) / width * 500} cx="0" r="2"/>
+                    <circle cy={(timeToMinutes(line) / width * 500) + 0} cx="0" r="2"/>
                   </React.Fragment>
                 )}
               </g>

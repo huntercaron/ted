@@ -111,14 +111,17 @@ function fetchData() {
   });
 }
 
+// add logic to grab multiple files
+
+
 exports.handler = (() => {
   var _ref = _asyncToGenerator(function* (event, context, callback) {
     try {
       const data = yield fetchData();
 
-      for (let i in data) {
-        console.log(data[i].speakerInfo.speakerName);
-      }
+      // for (let i in data) {
+      //   console.log(data[i].speakerInfo.speakerName);
+      // }
 
       callback(null, {
         statusCode: 200,

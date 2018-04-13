@@ -40,7 +40,7 @@ exports.handler = function (event, context, callback) {
 
     const json = JSON.stringify(cleanData);
 
-    fs.writeFile('cleanData.json', json, 'utf8', () => { console.log("wronte to file")
+    fs.writeFile(path + 'cleanData.json', json, 'utf8', () => { console.log("wronte to file")
     });
 
     callback(null, {

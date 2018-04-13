@@ -60,33 +60,23 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 87);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 1:
-/***/ (function(module, exports) {
-
-module.exports = require("util");
-
-/***/ }),
-
-/***/ 14:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports) {
 
 module.exports = require("fs");
 
 /***/ }),
-
-/***/ 20:
+/* 1 */
 /***/ (function(module, exports) {
 
-module.exports = require("http");
+module.exports = require("util");
 
 /***/ }),
-
-/***/ 87:
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -121,10 +111,10 @@ let searchTed = (() => {
 
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
-const fs = __webpack_require__(14);
+const fs = __webpack_require__(0);
 // const request = require("request");
 // const axios = require("axios")
-const http = __webpack_require__(20);
+const http = __webpack_require__(3);
 const { promisify } = __webpack_require__(1);
 // var request = promisify(req);
 
@@ -140,6 +130,11 @@ function fetchData() {
       console.log(data);
 
       body += data;
+    });
+
+    res.on("end", () => {
+      // body = JSON.parse(body);
+      console.log("done");
     });
   });
 
@@ -184,6 +179,11 @@ exports.handler = (() => {
   };
 })();
 
-/***/ })
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
 
-/******/ })));
+module.exports = require("http");
+
+/***/ })
+/******/ ])));

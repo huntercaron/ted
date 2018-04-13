@@ -18,6 +18,11 @@ function fetchData() {
       
       body += data;
     });
+
+    res.on("end", () => {
+      // body = JSON.parse(body);
+      console.log("done");
+    });
   })
 
 

@@ -60,25 +60,26 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 206);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
-/******/ ({
-
-/***/ 14:
+/******/ ([
+/* 0 */
 /***/ (function(module, exports) {
 
 module.exports = require("fs");
 
 /***/ }),
-
-/***/ 206:
+/* 1 */,
+/* 2 */,
+/* 3 */,
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-const fs = __webpack_require__(14);
+const fs = __webpack_require__(0);
 
 exports.handler = function (event, context, callback) {
   console.log(context);
@@ -91,5 +92,4 @@ exports.handler = function (event, context, callback) {
 };
 
 /***/ })
-
-/******/ })));
+/******/ ])));

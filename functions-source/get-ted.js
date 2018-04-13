@@ -1,4 +1,3 @@
-const fs = require('fs');
 // const request = require("request");
 // const axios = require("axios")
 const http = require("http");
@@ -12,6 +11,17 @@ function fetchData() {
     http.get(`http://tedtalk.directory/ted-data.json`, res => {
       res.setEncoding("utf8");
       let body = "";
+
+      const { statusCode } = res;
+      let error; 
+      if (statusCode !== 200)
+        error = new Error('Request Failed.\n' + `Status Code: ${statusCode}`);
+      if (error) {
+        console.error(error.message);
+        // consume response data to free up memory
+        res.resume();
+        return;
+      }
 
       res.on("data", data => {
         // console.log(data);
@@ -45,8 +55,8 @@ async function searchTed() {
 }
 
 exports.handler = async (event, context, callback) => {
-  console.log(context);
-  console.log(event.queryStringParameters.path)
+  // console.log(context);
+  // console.log(event.queryStringParameters.path)
 
   const res = await searchTed();
 

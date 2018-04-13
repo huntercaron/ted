@@ -76,7 +76,6 @@ const TedVis = styled.svg`
 
 const TalkCircle = styled.circle`
   &:hover {
-    transform: scale(4);
     opacity: 0;
   }
 `

@@ -78,6 +78,27 @@ module.exports = require("fs");
 
 
 const fs = __webpack_require__(0);
+const { promisify } = __webpack_require__(3);
+
+const writeFile = promisify(fs.writeFile);
+
+const cleanData = [{
+  "index": 1,
+  "speakerInfo": {
+    "speakerLink": "https://www.ted.com/speakers/al_gore",
+    "speakerName": "Al Gore",
+    "speakerTitle": "Climate advocate",
+    "speakerBio": "Nobel Laureate Al Gore focused the world’s attention on the global climate crisis. Now he’s showing us how we’re moving towards real solutions.\n"
+  }
+}, {
+  "index": 2,
+  "speakerInfo": {
+    "speakerLink": "https://www.ted.com/speakers/al_gore",
+    "speakerName": "Al Gore",
+    "speakerTitle": "Climate advocate",
+    "speakerBio": "Nobel Laureate Al Gore focused the world’s attention on the global climate crisis. Now he’s showing us how we’re moving towards real solutions.\n"
+  }
+}];
 
 exports.handler = function (event, context, callback) {
   let path = event.queryStringParameters.path || '.';
@@ -92,12 +113,24 @@ exports.handler = function (event, context, callback) {
       logs.push(items[i]);
     }
 
+    const json = JSON.stringify(cleanData);
+
+    fs.writeFile('cleanData.json', json, 'utf8', () => {
+      console.log("wronte to file");
+    });
+
     callback(null, {
       statusCode: 200,
       body: logs.join("\n").toString()
     });
   });
 };
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports) {
+
+module.exports = require("util");
 
 /***/ })
 /******/ ])));

@@ -25,29 +25,6 @@ function fetchData() {
       });
     })
   })
-
-
-  // return new Promise(resolve => {
-  //   request.get(`http://tedtalk.directory/ted-data.json`, (err, res, body) => {
-  //     if (err) {
-  //       reject(err)
-  //     }
-
-  //     console.log(body);
-      
-
-  //     resolve(body);
-  //   });
-  // })
-  
-
-  // fetch(`http://tedtalk.directory/ted-data.json`)
-  //   .then(function (response) {
-  //     return response.json();
-  //   })
-  //   .then(function (data) {
-  //     return new Promise(resolve => { resolve(data) })
-  //   });
 }
 
 async function searchTed() {

@@ -71,32 +71,6 @@
 "use strict";
 
 
-let searchTed = (() => {
-  var _ref = _asyncToGenerator(function* () {
-    try {
-      const data = yield fetchData();
-
-      for (let i in data) {
-        console.log(data[i].speakerInfo.speakerName);
-      }
-
-      return new Promise(function (resolve) {
-        resolve(data[0].speakerInfo.speakerName);
-      });
-    } catch (err) {
-      console.log(err);
-
-      return new Promise(function (reject) {
-        reject(err.toString());
-      });
-    }
-  });
-
-  return function searchTed() {
-    return _ref.apply(this, arguments);
-  };
-})();
-
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 // const request = require("request");
@@ -138,20 +112,30 @@ function fetchData() {
 }
 
 exports.handler = (() => {
-  var _ref2 = _asyncToGenerator(function* (event, context, callback) {
-    // console.log(context);
-    // console.log(event.queryStringParameters.path)
+  var _ref = _asyncToGenerator(function* (event, context, callback) {
+    try {
+      const data = yield fetchData();
 
-    const res = yield searchTed();
+      for (let i in data) {
+        console.log(data[i].speakerInfo.speakerName);
+      }
 
-    callback(null, {
-      statusCode: 200,
-      body: res
-    });
+      callback(null, {
+        statusCode: 200,
+        body: data[0].speakerInfo.speakerName
+      });
+    } catch (err) {
+      console.log(err);
+
+      callback(null, {
+        statusCode: 400,
+        body: err
+      });
+    }
   });
 
   return function (_x, _x2, _x3) {
-    return _ref2.apply(this, arguments);
+    return _ref.apply(this, arguments);
   };
 })();
 

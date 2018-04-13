@@ -37,7 +37,8 @@ function fetchData() {
   })
 }
 
-async function searchTed() {
+
+exports.handler = async (event, context, callback) => {
   try {
     const data = await fetchData();
 
@@ -45,23 +46,17 @@ async function searchTed() {
       console.log(data[i].speakerInfo.speakerName);
     }
 
-    return new Promise(resolve => { resolve(data[0].speakerInfo.speakerName) })
+    callback(null, {
+      statusCode: 200,
+      body: data[0].speakerInfo.speakerName
+    });
   }
   catch (err) {
     console.log(err);
-    
-    return new Promise(reject => { reject(err.toString()) })
+
+    callback(null, {
+      statusCode: 400,
+      body: err
+    });
   }
-}
-
-exports.handler = async (event, context, callback) => {
-  // console.log(context);
-  // console.log(event.queryStringParameters.path)
-
-  const res = await searchTed();
-
-  callback(null, {
-    statusCode: 200,
-    body: res
-  });
 }

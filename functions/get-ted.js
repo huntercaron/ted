@@ -85,8 +85,7 @@ module.exports = require("util");
 let searchTed = (() => {
   var _ref = _asyncToGenerator(function* () {
     try {
-      const body = yield fetchData();
-      const data = JSON.parse(body);
+      const data = yield fetchData();
 
       for (let i in data) {
         console.log(data[i].speakerInfo.speakerName);
@@ -121,20 +120,21 @@ const { promisify } = __webpack_require__(1);
 const url = "https://maps.googleapis.com/maps/api/geocode/json?address=Florence";
 
 function fetchData() {
+  return new Promise(resolve => {
+    http.get(`http://tedtalk.directory/ted-data.json`, res => {
+      res.setEncoding("utf8");
+      let body = "";
 
-  http.get(`http://tedtalk.directory/ted-data.json`, res => {
-    res.setEncoding("utf8");
-    let body = "";
+      res.on("data", data => {
+        // console.log(data);
+        body += data;
+      });
 
-    res.on("data", data => {
-      console.log(data);
-
-      body += data;
-    });
-
-    res.on("end", () => {
-      // body = JSON.parse(body);
-      console.log("done");
+      res.on("end", () => {
+        let dataJson = JSON.parse(body);
+        console.log("done");
+        resolve(dataJson);
+      });
     });
   });
 

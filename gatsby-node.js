@@ -7,7 +7,7 @@
 const fs = require('fs');
 
 const fromFilePath = './ted-data.json'
-const toFilePath = './public/ted-datajson'
+const toFilePath = './public/ted-data.json'
 
 
 exports.onPreBuild = () => {

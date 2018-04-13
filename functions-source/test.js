@@ -1,9 +1,9 @@
 const fs = require('fs');
 
 exports.handler = function (event, context, callback) {
-  
+  let path = event.queryStringParameters.path || '.';
 
-  fs.readdir('../.', function (err, items) {
+  fs.readdir(path, function (err, items) {
     console.log(items);
 
     let logs = [];
@@ -15,7 +15,7 @@ exports.handler = function (event, context, callback) {
 
     callback(null, {
       statusCode: 200,
-      body: logs.toString()
+      body: logs.join("\n").toString()
     });
   });
 }

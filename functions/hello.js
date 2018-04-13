@@ -60,7 +60,7 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 1);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -70,8 +70,7 @@
 module.exports = require("fs");
 
 /***/ }),
-/* 1 */,
-/* 2 */
+/* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -80,22 +79,12 @@ module.exports = require("fs");
 const fs = __webpack_require__(0);
 
 exports.handler = function (event, context, callback) {
-  let path = event.queryStringParameters.path || '.';
+  console.log(context);
+  console.log(event.queryStringParameters.path);
 
-  fs.readdir(path, function (err, items) {
-    console.log(items);
-
-    let logs = [];
-
-    for (var i = 0; i < items.length; i++) {
-      console.log(items[i]);
-      logs.push(items[i]);
-    }
-
-    callback(null, {
-      statusCode: 200,
-      body: logs.join("\n").toString()
-    });
+  callback(null, {
+    statusCode: 200,
+    body: "suh"
   });
 };
 

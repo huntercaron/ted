@@ -6,14 +6,14 @@ const { promisify } = require('util');
 
 const url = "https://maps.googleapis.com/maps/api/geocode/json?address=Florence";
 
-function fetchData() {
+function fetchFile(path) {
   return new Promise(resolve => {
-    http.get(`http://tedtalk.directory/ted-data.json`, res => {
+    http.get(path, res => {
       res.setEncoding("utf8");
       let body = "";
 
       const { statusCode } = res;
-      let error; 
+      let error;
       if (statusCode !== 200)
         error = new Error('Request Failed.\n' + `Status Code: ${statusCode}`);
       if (error) {
@@ -35,6 +35,35 @@ function fetchData() {
       });
     })
   })
+}
+
+async function fetchData() {
+  try {
+    let filePromises = [];
+
+    for (let i = 1; i <= 5; i++) {
+      filePromises.push(fetchFile(`http://tedtalk.directory/ted-data-${i}.json`) );
+    }
+
+    const files = await Promise.all(filePromises);
+    // const talks = [];
+
+    // for (let file in files) {
+    //   for (let talk of files[file]) {
+    //     if (talk === null) {
+    //       console.log("NULL", file);
+          
+    //     }
+    //     talks.push(talk)
+    //   }
+    // }
+    
+    const talks = [].concat(...files);
+    // console.log(combinedTalks);
+    
+
+    return new Promise(resolve => resolve(talks));
+  } catch (err) { console.error(err) }
 }
 
 async function searchTranscript(transcript, searchTerm) {
@@ -81,7 +110,7 @@ exports.handler = async (event, context, callback) => {
 
     callback(null, {
       statusCode: 400,
-      body: err
+      body: err.toString()
     });
   }
 }

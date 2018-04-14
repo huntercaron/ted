@@ -60,19 +60,64 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 1);
+/******/ 	return __webpack_require__(__webpack_require__.s = 2);
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */,
-/* 1 */
+/* 0 */
+/***/ (function(module, exports) {
+
+module.exports = require("util");
+
+/***/ }),
+/* 1 */,
+/* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
+let fetchData = (() => {
+  var _ref = _asyncToGenerator(function* () {
+    try {
+      let filePromises = [];
+
+      for (let i = 1; i <= 5; i++) {
+        filePromises.push(fetchFile(`http://tedtalk.directory/ted-data-${i}.json`));
+      }
+
+      const files = yield Promise.all(filePromises);
+      // const talks = [];
+
+      // for (let file in files) {
+      //   for (let talk of files[file]) {
+      //     if (talk === null) {
+      //       console.log("NULL", file);
+
+      //     }
+      //     talks.push(talk)
+      //   }
+      // }
+
+      const talks = [].concat(...files);
+      // console.log(combinedTalks);
+
+
+      return new Promise(function (resolve) {
+        return resolve(talks);
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  });
+
+  return function fetchData() {
+    return _ref.apply(this, arguments);
+  };
+})();
+
 let searchTranscript = (() => {
-  var _ref = _asyncToGenerator(function* (transcript, searchTerm) {
+  var _ref2 = _asyncToGenerator(function* (transcript, searchTerm) {
     return new Promise(function (resolve) {
       let lastLine = transcript[transcript.length - 1].time;
 
@@ -91,7 +136,7 @@ let searchTranscript = (() => {
   });
 
   return function searchTranscript(_x, _x2) {
-    return _ref.apply(this, arguments);
+    return _ref2.apply(this, arguments);
   };
 })();
 
@@ -102,15 +147,15 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 // const request = require("request");
 // const axios = require("axios")
-const http = __webpack_require__(5);
-const { promisify } = __webpack_require__(4);
+const http = __webpack_require__(3);
+const { promisify } = __webpack_require__(0);
 // var request = promisify(req);
 
 const url = "https://maps.googleapis.com/maps/api/geocode/json?address=Florence";
 
-function fetchData() {
+function fetchFile(path) {
   return new Promise(resolve => {
-    http.get(`http://tedtalk.directory/ted-data.json`, res => {
+    http.get(path, res => {
       res.setEncoding("utf8");
       let body = "";
 
@@ -139,7 +184,7 @@ function fetchData() {
 }
 
 exports.handler = (() => {
-  var _ref2 = _asyncToGenerator(function* (event, context, callback) {
+  var _ref3 = _asyncToGenerator(function* (event, context, callback) {
     try {
       const data = yield fetchData();
       let searchTerm = event.queryStringParameters.search.toLowerCase() || '(Applause)';
@@ -160,26 +205,18 @@ exports.handler = (() => {
 
       callback(null, {
         statusCode: 400,
-        body: err
+        body: err.toString()
       });
     }
   });
 
   return function (_x3, _x4, _x5) {
-    return _ref2.apply(this, arguments);
+    return _ref3.apply(this, arguments);
   };
 })();
 
 /***/ }),
-/* 2 */,
-/* 3 */,
-/* 4 */
-/***/ (function(module, exports) {
-
-module.exports = require("util");
-
-/***/ }),
-/* 5 */
+/* 3 */
 /***/ (function(module, exports) {
 
 module.exports = require("http");

@@ -5,7 +5,7 @@
  */
 
 // const fs = require('fs');
-const fs = require(`fs-extra`)
+// const fs = require(`fs-extra`)
 
 const fromFilePath = './ted-data-big.json'
 const toFilePath = './public/ted-data.json'

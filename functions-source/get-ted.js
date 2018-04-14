@@ -37,20 +37,43 @@ function fetchData() {
   })
 }
 
+async function searchTranscript(transcript, searchTerm) {
+  return new Promise(resolve => {
+    let lastLine = transcript[transcript.length - 1].time;
+
+    let foundLines = transcript.reduce((accumulator, line) => {
+      if (line.text.toLowerCase().indexOf(searchTerm) !== -1)
+        accumulator.push(line.time);
+      return accumulator;
+    }, [])
+
+    let transcriptData = {
+      foundLines: foundLines,
+      lastLine: lastLine
+    }
+
+    resolve(transcriptData);
+  })
+}
+
 // add logic to grab multiple files
 
 
 exports.handler = async (event, context, callback) => {
   try {
     const data = await fetchData();
+    let searchTerm = event.queryStringParameters.search.toLowerCase() || '(Applause)';
+    let talkPromises = [];
 
-    // for (let i in data) {
-    //   console.log(data[i].speakerInfo.speakerName);
-    // }
+    for (let i = 0; i < data.length; i++) {
+      talkPromises.push(searchTranscript(data[i].transcript, searchTerm));
+    }
+
+    const foundLines = await Promise.all(talkPromises);
 
     callback(null, {
       statusCode: 200,
-      body: data[0].speakerInfo.speakerName
+      body: JSON.stringify(foundLines)
     });
   }
   catch (err) {

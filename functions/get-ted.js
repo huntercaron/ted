@@ -71,6 +71,33 @@
 "use strict";
 
 
+let searchTranscript = (() => {
+  var _ref = _asyncToGenerator(function* (transcript, searchTerm) {
+    return new Promise(function (resolve) {
+      let lastLine = transcript[transcript.length - 1].time;
+
+      let foundLines = transcript.reduce(function (accumulator, line) {
+        if (line.text.toLowerCase().indexOf(searchTerm) !== -1) accumulator.push(line.time);
+        return accumulator;
+      }, []);
+
+      let transcriptData = {
+        foundLines: foundLines,
+        lastLine: lastLine
+      };
+
+      resolve(transcriptData);
+    });
+  });
+
+  return function searchTranscript(_x, _x2) {
+    return _ref.apply(this, arguments);
+  };
+})();
+
+// add logic to grab multiple files
+
+
 function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
 
 // const request = require("request");
@@ -111,21 +138,22 @@ function fetchData() {
   });
 }
 
-// add logic to grab multiple files
-
-
 exports.handler = (() => {
-  var _ref = _asyncToGenerator(function* (event, context, callback) {
+  var _ref2 = _asyncToGenerator(function* (event, context, callback) {
     try {
       const data = yield fetchData();
+      let searchTerm = event.queryStringParameters.search.toLowerCase() || '(Applause)';
+      let talkPromises = [];
 
-      // for (let i in data) {
-      //   console.log(data[i].speakerInfo.speakerName);
-      // }
+      for (let i = 0; i < data.length; i++) {
+        talkPromises.push(searchTranscript(data[i].transcript, searchTerm));
+      }
+
+      const foundLines = yield Promise.all(talkPromises);
 
       callback(null, {
         statusCode: 200,
-        body: data[0].speakerInfo.speakerName
+        body: JSON.stringify(foundLines)
       });
     } catch (err) {
       console.log(err);
@@ -137,8 +165,8 @@ exports.handler = (() => {
     }
   });
 
-  return function (_x, _x2, _x3) {
-    return _ref.apply(this, arguments);
+  return function (_x3, _x4, _x5) {
+    return _ref2.apply(this, arguments);
   };
 })();
 

@@ -1,7 +1,6 @@
 // const request = require("request");
 // const axios = require("axios")
 const http = require("http");
-const { promisify } = require('util');
 // var request = promisify(req);
 
 const url = "https://maps.googleapis.com/maps/api/geocode/json?address=Florence";
@@ -37,35 +36,6 @@ function fetchFile(path) {
   })
 }
 
-async function fetchData() {
-  try {
-    let filePromises = [];
-
-    for (let i = 1; i <= 5; i++) {
-      filePromises.push(fetchFile(`http://tedtalk.directory/ted-data-${i}.json`) );
-    }
-
-    const files = await Promise.all(filePromises);
-    // const talks = [];
-
-    // for (let file in files) {
-    //   for (let talk of files[file]) {
-    //     if (talk === null) {
-    //       console.log("NULL", file);
-          
-    //     }
-    //     talks.push(talk)
-    //   }
-    // }
-    
-    const talks = [].concat(...files);
-    // console.log(combinedTalks);
-    
-
-    return new Promise(resolve => resolve(talks));
-  } catch (err) { console.error(err) }
-}
-
 async function searchTranscript(transcript, searchTerm) {
   return new Promise(resolve => {
     let lastLine = transcript[transcript.length - 1].time;
@@ -90,7 +60,8 @@ async function searchTranscript(transcript, searchTerm) {
 
 exports.handler = async (event, context, callback) => {
   try {
-    const data = await fetchData();
+    let fileNum = event.queryStringParameters.number || 1;
+    const data = await fetchFile(`http://tedtalk.directory/ted-data-${fileNum}.json`);
     let searchTerm = event.queryStringParameters.search.toLowerCase() || '(Applause)';
     let talkPromises = [];
 

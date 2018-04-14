@@ -60,33 +60,26 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 11);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 1:
 /***/ (function(module, exports) {
 
 module.exports = require("util");
 
 /***/ }),
-/* 1 */
-/***/ (function(module, exports) {
 
-module.exports = require("fs");
-
-/***/ }),
-/* 2 */,
-/* 3 */,
-/* 4 */,
-/* 5 */
+/***/ 11:
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-const fs = __webpack_require__(1);
-const { promisify } = __webpack_require__(0);
+const fs = __webpack_require__(2);
+const { promisify } = __webpack_require__(1);
 
 const writeFile = promisify(fs.writeFile);
 
@@ -134,5 +127,13 @@ exports.handler = function (event, context, callback) {
   });
 };
 
+/***/ }),
+
+/***/ 2:
+/***/ (function(module, exports) {
+
+module.exports = require("fs");
+
 /***/ })
-/******/ ])));
+
+/******/ })));

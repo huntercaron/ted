@@ -60,18 +60,25 @@
 /******/ 	__webpack_require__.p = "";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 2);
+/******/ 	return __webpack_require__(__webpack_require__.s = 4);
 /******/ })
 /************************************************************************/
 /******/ ([
 /* 0 */
 /***/ (function(module, exports) {
 
+module.exports = require("http");
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports) {
+
 module.exports = require("util");
 
 /***/ }),
-/* 1 */,
-/* 2 */
+/* 2 */,
+/* 3 */,
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -147,8 +154,8 @@ function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, a
 
 // const request = require("request");
 // const axios = require("axios")
-const http = __webpack_require__(3);
-const { promisify } = __webpack_require__(0);
+const http = __webpack_require__(0);
+const { promisify } = __webpack_require__(1);
 // var request = promisify(req);
 
 const url = "https://maps.googleapis.com/maps/api/geocode/json?address=Florence";
@@ -214,12 +221,6 @@ exports.handler = (() => {
     return _ref3.apply(this, arguments);
   };
 })();
-
-/***/ }),
-/* 3 */
-/***/ (function(module, exports) {
-
-module.exports = require("http");
 
 /***/ })
 /******/ ])));

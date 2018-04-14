@@ -80,7 +80,7 @@ injectGlobal`
       font-size: 1.6em;
       line-height: 1.6;
       font-weight: 400;
-      font-family: 'Unreal', 'Helvetica', 'Arial', sans-serif;
+      font-family: monospace;
       color: black;
       background-color: white;
       webkit-font-smoothing: antialiased;
@@ -95,7 +95,7 @@ injectGlobal`
   }
 
   h1, h2, h3, h4, h5, h6, p {
-    font-family: 'Unreal', 'Helvetica', 'Arial', sans-serif;
+    font-family: monospace;
     margin-top: 0;
     margin-bottom: 0rem;
     font-weight: 400;

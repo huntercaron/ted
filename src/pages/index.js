@@ -22,24 +22,28 @@ const InputContainer = styled.form`
     justify-content: center;
     padding: 2rem 0;
     position: sticky;
+    z-index: 4;
     top: 0;
 `;
 
 const SearchInput = styled.input`
   outline: none;
-  border-radius: 50px;
-  border: 1.5px solid black;
+  border: none;
   width: 70%;
   height: 50px;
   font-size: 1.6rem;
   padding-left: 22px;
+      font-family: monospace !important;
+      text-align: right;
+    border-bottom: 1px solid #aaa;
   font-family: sans-serif;
 
   transition: all 200ms ease-out;
 `
 
-const SubmitArrow = styled.button`
+const SubmitArrow = styled.div`
   padding: 1rem;
+  font-size: 1.6rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,14 +52,8 @@ const SubmitArrow = styled.button`
   background: none;
   border-radius: 50%;
   margin: 0 0.5rem;
+  border-bottom: black;
 
-  svg {
-    transition: opacity 150ms ease-out;
-    opacity: 1;
-  }
-  
-  width: 50px;
-  height: 50px;
 
   &:active {
     background-color: #eee;
@@ -66,23 +64,19 @@ const TedVis = styled.svg`
   width: 98%;
   margin: 0 1%;
 
-
   circle {
     transform-origin: center center;
   }
 
-  circle
-`
-
-const TalkCircle = styled.circle`
-  &:hover {
-    opacity: 0;
+  circle:hover {
+    transform: scale(4);
+    
   }
 `
 
 const Legend = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   text-transform: uppercase;
   font-size: 1rem;
   opacity: 0.7;
@@ -137,28 +131,24 @@ class IndexPage extends React.Component {
   render() {
     return (
       <div>
-        <Heading>TED</Heading>
 
         <InputContainer onSubmit={this.updateSearchTerm}>
           <SearchInput
             type="text"
             innerRef={input => this.searchInput = input}
-            placeholder="Search" 
+            placeholder="Search for (Applause)" 
           />
 
           <SubmitArrow submitted={this.state.imageMode}>
-            <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 14 11">
-              <polygon fill="#000000" fillRule="evenodd" points="8.81 .647 13.655 5.492 13.655 5.934 8.81 10.779 7.824 9.793 11.258 6.393 .684 6.393 .684 5.05 11.275 5.05 7.824 1.633" />
-            </svg>
+            in a Ted Talk
           </SubmitArrow>
         </InputContainer>
 
         <Legend>
           <p>Talk Start</p>
-          <p>Talk End</p>
         </Legend>
 
-        <TedVis xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 10505">
+        <TedVis xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 500">
           {this.state.tedData.map((talk, i) => {
             if (talk.foundLines.length <= 0)
               return <g key={i}/>
@@ -166,12 +156,12 @@ class IndexPage extends React.Component {
             let width = timeToMinutes(talk.lastLine);
 
             return (
-              <g key={i} transform={`translate(5, ${10500 / this.state.tedData.length * i + 5})`} fill="rgba(255, 50, 0, 0.6)">
-                <line x1="0" y1="0" y2="0" x2="1000" stroke="rgba(0,0,0, 0)" strokeWidth="1" />
+              <g key={i} transform={`translate(${1000/this.state.tedData.length*i})`} fill="rgba(0, 50, 0, 0.6)">
+                <line x1="0" y1="0" y2="500" x2="0" stroke="rgba(0,0,0, 0)" strokeWidth="0.1" />
                 
                 {talk.foundLines.map((line,i) => 
                   <React.Fragment key={i}>
-                    <circle cy="0" cx={timeToMinutes(line)/width * 1000} r="2"/>
+                    <circle cy={(timeToMinutes(line) / width * 500) + 0} cx="0" r="2"/>
                   </React.Fragment>
                 )}
               </g>
@@ -179,6 +169,9 @@ class IndexPage extends React.Component {
           })}
         </TedVis>
 
+        <Legend>
+          <p>Talk End</p>
+        </Legend>
       </div>
     )
   }

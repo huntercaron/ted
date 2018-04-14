@@ -66,7 +66,7 @@ const SubmitArrow = styled.div`
 `
 
 const TedVis = styled.svg`
-  width: 98%;
+
   margin: 0 1%;
 
   circle {
@@ -74,7 +74,7 @@ const TedVis = styled.svg`
   }
 
   circle:hover {
-    transform: scale(4);
+    
     
   }
 `
@@ -153,7 +153,7 @@ class IndexPage extends React.Component {
           <p>Talk Start</p>
         </Legend>
 
-        <TedVis xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 500">
+        <TedVis xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 500" preserveAspectRatio="xMinYMin meet">
           {this.state.tedData.map((talk, i) => {
             if (talk.foundLines.length <= 0)
               return <g key={i}/>

@@ -50,9 +50,14 @@ const SubmitArrow = styled.div`
   outline: none;
   border: none;
   background: none;
-  border-radius: 50%;
   margin: 0 0.5rem;
   border-bottom: black;
+  cursor: pointer;
+  
+
+  &:hover {
+    border-bottom: 1px solid black;
+  }
 
 
   &:active {
@@ -96,9 +101,9 @@ class IndexPage extends React.Component {
     let scope = this;
 
     console.log(searchTerm);
-    
 
-    fetch(`http://localhost:3000/ted/search/${searchTerm}`)
+    // fetch(`http://localhost:3000/ted/search/${searchTerm}`)
+    fetch(`http://tedtalk.directory/.netlify/functions/get-ted?search=${searchTerm}`)
       .then(function (response) {
         return response.json();
       })
@@ -140,7 +145,7 @@ class IndexPage extends React.Component {
           />
 
           <SubmitArrow submitted={this.state.imageMode}>
-            in a Ted Talk
+            in a Ted Talk &rarr;
           </SubmitArrow>
         </InputContainer>
 

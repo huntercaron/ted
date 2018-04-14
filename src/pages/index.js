@@ -102,8 +102,14 @@ class IndexPage extends React.Component {
 
     console.log(searchTerm);
 
-    // fetch(`http://localhost:3000/ted/search/${searchTerm}`)
-    fetch(`http://tedtalk.directory/.netlify/functions/get-ted?search=${searchTerm}`)
+    const baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? 
+      "http://localhost:9000/" :
+      "http://tedtalk.directory/.netlify/functions/";
+
+    console.log(baseUrl);
+    
+
+    fetch(baseUrl + `ted-section-1?search=${searchTerm}`)
       .then(function (response) {
         return response.json();
       })

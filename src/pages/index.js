@@ -93,33 +93,49 @@ const Legend = styled.div`
 class IndexPage extends React.Component {
   state = {
     tedData: [],
-    search: ""
+    search: "",
+    talkSpeaker: ""
+  }
+
+  dataLength = 1754;
+  
+  fetchSingle = (url) => {
+    return new Promise(resolve => {
+      const baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ?
+        "http://localhost:9000/" :
+        "http://tedtalk.directory/.netlify/functions/";
+
+      fetch(baseUrl + url)
+        .then(function (response) {
+          return response.json();
+        })
+        .then(function (data) {
+          resolve(data);
+        });
+    })
+
   }
 
   fetchTedData = (term = "applause") => {
     let searchTerm = term;
     let scope = this;
+    let talkRequests = [];
 
-    console.log(searchTerm);
+    for (let i = 1; i <= 5; i++) {
+      talkRequests.push(this.fetchSingle(`ted-section-${i}?search=${searchTerm}`));
+    }
 
-    const baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ? 
-      "http://localhost:9000/" :
-      "http://tedtalk.directory/.netlify/functions/";
-
-    console.log(baseUrl);
+    console.log(talkRequests);
     
+    Promise.all(talkRequests).then(files => {
+      const talks = [].concat(...files);
 
-    fetch(baseUrl + `ted-section-1?search=${searchTerm}`)
-      .then(function (response) {
-        return response.json();
+      console.log(talks.length);
+
+      scope.setState({
+        tedData: talks
       })
-      .then(function (data) {
-        console.log(data);
-        
-        scope.setState({
-          tedData: data
-        })
-      });
+    })
   }
 
   updateSearchTerm = (e) => {
@@ -156,7 +172,7 @@ class IndexPage extends React.Component {
         </InputContainer>
 
         <Legend>
-          <p>Talk Start</p>
+          <p>Talk Start {this.state.talkSpeaker}</p>
         </Legend>
 
         <TedVis xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 500" preserveAspectRatio="xMinYMin meet">

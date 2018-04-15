@@ -5,8 +5,6 @@
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
     "d3": "^5.0.0",
-    "firebase": "4.12.0",
-    "fs-extra": "^5.0.0",
     "gatsby": "^1.9.241",
     "gatsby-link": "^1.6.39",
     "gatsby-plugin-react-helmet": "^2.0.8",
@@ -14,7 +12,6 @@
     "gatsby-plugin-styled-components": "^2.0.11",
     "modern-normalize": "^0.4.0",
     "netlify-lambda": "^0.3.1",
-    "node-fetch": "^2.1.2",
     "react-helmet": "^5.2.0",
     "styled-components": "^3.2.5"
   },
@@ -28,6 +25,9 @@
     "format": "prettier --write 'src/**/*.js'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "functions": "netlify-lambda serve /functions-source"
+  },
+  "resolutions": {
+    "gatsby-plugin-react-next/react": "^16.3.0"
   },
   "devDependencies": {
     "prettier": "^1.11.1"

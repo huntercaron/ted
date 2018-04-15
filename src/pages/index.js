@@ -24,14 +24,16 @@ const InputContainer = styled.form`
     position: sticky;
     z-index: 4;
     top: 0;
+    height: 10vh;
 `;
 
 const SearchInput = styled.input`
   outline: none;
   border: none;
   width: 70%;
-  height: 50px;
+  height: 40px;
   font-size: 1.6rem;
+  margin-top: 8px;
   padding-left: 22px;
       font-family: monospace !important;
       text-align: right;
@@ -41,8 +43,10 @@ const SearchInput = styled.input`
   transition: all 200ms ease-out;
 `
 
-const SubmitArrow = styled.div`
+const SubmitArrow = styled.button`
+  height: 40px;
   padding: 1rem;
+
   font-size: 1.6rem;
   display: flex;
   justify-content: center;
@@ -51,8 +55,10 @@ const SubmitArrow = styled.div`
   border: none;
   background: none;
   margin: 0 0.5rem;
+    margin-top: 8px;
   border-bottom: black;
   cursor: pointer;
+  border-bottom: 1px solid rgba(0,0,0,0);
   
 
   &:hover {
@@ -66,8 +72,8 @@ const SubmitArrow = styled.div`
 `
 
 const TedVis = styled.svg`
-
-  margin: 0 1%;
+  margin: 0;
+  border-top: 1px solid rgba(0,0,0,0.1);
 
   circle {
     transform-origin: center center;
@@ -94,7 +100,9 @@ class IndexPage extends React.Component {
   state = {
     tedData: [],
     search: "",
-    talkSpeaker: ""
+    talkSpeaker: "",
+    windowWidth: 1000,
+    windowHeight: 1000
   }
 
   dataLength = 1754;
@@ -123,9 +131,7 @@ class IndexPage extends React.Component {
 
     for (let i = 1; i <= 5; i++) {
       talkRequests.push(this.fetchSingle(`ted-section-${i}?search=${searchTerm}`));
-    }
-
-    console.log(talkRequests);
+    } 
     
     Promise.all(talkRequests).then(files => {
       const talks = [].concat(...files);
@@ -151,9 +157,22 @@ class IndexPage extends React.Component {
     })
   }
 
+  calcAspectRatio = () => {
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+
+    this.setState({
+      windowWidth: width,
+      windowHeight: height
+    })
+  }
+
   componentDidMount() {
     this.fetchTedData();
+    this.calcAspectRatio();
   }
+
+
 
   render() {
     return (
@@ -166,29 +185,29 @@ class IndexPage extends React.Component {
             placeholder="Search for (Applause)" 
           />
 
-          <SubmitArrow submitted={this.state.imageMode}>
+          <SubmitArrow submitted={this.state.imageMode} type="submit">
             in a Ted Talk &rarr;
           </SubmitArrow>
         </InputContainer>
 
-        <Legend>
+        {/* <Legend>
           <p>Talk Start {this.state.talkSpeaker}</p>
-        </Legend>
+        </Legend> */}
 
-        <TedVis xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1010 500" preserveAspectRatio="xMinYMin meet">
+        <TedVis xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${this.state.windowWidth} ${this.state.windowHeight*0.9}`} preserveAspectRatio="xMinYMin meet">
           {this.state.tedData.map((talk, i) => {
             if (talk.foundLines.length <= 0)
               return <g key={i}/>
 
-            let width = timeToMinutes(talk.lastLine);
+            let height = timeToMinutes(talk.lastLine);
 
             return (
-              <g key={i} transform={`translate(${1000/this.state.tedData.length*i})`} fill="rgba(0, 50, 0, 0.6)">
+              <g key={i} transform={`translate(${this.state.windowWidth*2/this.state.tedData.length*i})`} fill="rgba(0, 50, 0, 0.6)">
                 <line x1="0" y1="0" y2="500" x2="0" stroke="rgba(0,0,0, 0)" strokeWidth="0.1" />
                 
                 {talk.foundLines.map((line,i) => 
                   <React.Fragment key={i}>
-                    <circle cy={(timeToMinutes(line) / width * 500) + 0} cx="0" r="2"/>
+                    <circle cy={(timeToMinutes(line) / height * this.state.windowHeight * 0.9) + 0} cx="0" r="2.5"/>
                   </React.Fragment>
                 )}
               </g>
@@ -196,9 +215,9 @@ class IndexPage extends React.Component {
           })}
         </TedVis>
 
-        <Legend>
+        {/* <Legend>
           <p>Talk End</p>
-        </Legend>
+        </Legend> */}
       </div>
     )
   }

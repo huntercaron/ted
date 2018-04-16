@@ -5,6 +5,17 @@ import Vis from '../components/Vis'
 
 const talkData = require('../assets/data/talk-data.json')
 
+function timeToMilliseconds(timeString) {
+  let time = timeString.split(':');
+  let minutes = (+time[0]) * 60 + (+time[1]);
+
+  let milliseconds = minutes * 1000
+  console.log(minutes);
+  
+
+  return milliseconds;
+}
+
 
 function getClosestWord(str, pos) {
   // Perform type conversions.
@@ -115,12 +126,16 @@ const InfoTooltip = styled.div`
 
 const TalkTitle = styled.p`
   font-size: 1rem;
-  opacity: 0.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin: 0.5rem 1.5rem;
+  width: 75%;
 `;
 
 const Time = styled.p`
   position: absolute;
-  top: 0.25rem;
+  top: 0.5rem;
   right: 1rem;
   font-size: 1rem;
   opacity: 0.4;
@@ -129,8 +144,14 @@ const Time = styled.p`
 const PreviewText = styled.p`
   line-height: 1.3;
   margin: 1.5rem;
-  margin-top: 2.5rem;
   font-size: 1.2rem;
+`;
+
+const LinkText = styled.p`
+  line-height: 1.3;
+  margin: 1.5rem;
+  font-size: 1.2rem;
+  opacity: 0.4;
 `;
 
 
@@ -209,14 +230,19 @@ class IndexPage extends React.PureComponent {
     let bounds = e.target.getBoundingClientRect();
     
     let searchIndex = text.toLowerCase().indexOf(this.state.search);
-    console.log(searchIndex);
     
     let textSnippet = getClosestWord(text, searchIndex)
+
+    const talkInfo = talkData.find(talk => talk.index === index);
+    console.log(time);
+    
     
     this.setState({
       lineIndex: index,
       lineText: textSnippet,
       lineTime: time,
+      lineLink: talkInfo.url,
+      lineTitle: talkInfo.talkTitle,
       tooltipOpen: true,
       tooltipLeft: bounds.left+bounds.height,
       tooltipTop: bounds.top+bounds.height
@@ -224,9 +250,10 @@ class IndexPage extends React.PureComponent {
   }
 
   closeTooltip = () => {
-    console.log("fuck")
     this.setState({
-      tooltipOpen: false
+      tooltipOpen: false,
+      lineLink: "",
+      lineTime: ""
     })
   }
 
@@ -267,11 +294,14 @@ class IndexPage extends React.PureComponent {
           <PreviewText>{this.state.lineText}</PreviewText>
         </InfoTooltip>
 
-        <Vis 
-          tedData={this.state.tedData} 
-          handleTooltip={this.handleTooltip}
-          handleMouseLeave={this.closeTooltip}
-        />
+        <a href={this.state.lineLink + "#t-" + timeToMilliseconds(this.state.lineTime)} target="_blank">
+          <Vis 
+            tedData={this.state.tedData} 
+            talkData={talkData}
+            handleTooltip={this.handleTooltip}
+            handleMouseLeave={this.closeTooltip}
+          />
+        </a>
 
         {/* <Legend>
           <p>Talk Start {this.state.talkSpeaker}</p>

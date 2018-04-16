@@ -10,8 +10,8 @@ function timeToMinutes(timeString) {
 }
 
 
-
 const TedVis = styled.svg`
+  cursor: default;
 
   margin: 0;
   border-top: 1px solid rgba(0,0,0,0.1);
@@ -22,7 +22,7 @@ const TedVis = styled.svg`
   }
 
   circle:hover {
-    
+    cursor: pointer;
     fill: #E62A01;
   }
 `
@@ -63,19 +63,21 @@ export default class Vis extends React.Component {
 
           let height = timeToMinutes(talk.lastLine);
 
+
+
           return (
             <g key={i} transform={`translate(${this.state.windowWidth * 2 / this.props.tedData.length * i})`} fill="rgba(0,0,0, 0.2)">
               <line x1="0" y1="0" y2="500" x2="0" stroke="rgba(0,0,0, 0)" strokeWidth="0.1" />
 
               {talk.foundLines.map(({ time, text }, i) =>
                 <React.Fragment key={i}>
-                  <circle
-                    cy={(timeToMinutes(time) / height * (this.state.windowHeight * 0.9 - 15)) + 10}
-                    cx="0"
-                    r="4"
-                    onMouseEnter={(e) => this.props.handleTooltip(e, time, text, talk.index)}
-                    onMouseLeave={() => this.props.handleMouseLeave()}
-                  />
+                    <circle
+                      cy={(timeToMinutes(time) / height * (this.state.windowHeight * 0.9 - 15)) + 10}
+                      cx="0"
+                      r="4"
+                      onMouseEnter={(e) => this.props.handleTooltip(e, time, text, talk.index)}
+                      onMouseLeave={() => this.props.handleMouseLeave()}
+                    />
                 </React.Fragment>
               )}
             </g>

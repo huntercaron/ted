@@ -2,6 +2,10 @@ import React from 'react'
 import Link from 'gatsby-link'
 import styled from 'styled-components';
 
+const talkData = require('../assets/data/talk-data.json')
+console.log(talkData);
+
+
 
 function timeToMinutes(timeString) {
   let time = timeString.split(':');
@@ -9,6 +13,29 @@ function timeToMinutes(timeString) {
 
   return minutes;
 }
+
+function getClosestWord(str, pos) {
+  // Perform type conversions.
+  str = String(str);
+  pos = Number(pos) >>> 0;
+
+  // Search for the word's beginning and end.
+  let left = str.slice(0, pos + 1).lastIndexOf('.')+1
+  let right = str.slice(pos).search(/[.?!]/)+1;
+
+  // The last word in the string is a special case.
+  if (right < 1) {
+    return str.slice(left);
+  }
+  // Return the word, using the located bounds to extract it from the string.
+  return str.slice(left, right + pos);
+}
+
+
+
+const Container = styled.div`
+  background-color: white;
+`
 
 const Heading = styled.h1`
   font-size: 32vw;
@@ -25,6 +52,8 @@ const InputContainer = styled.form`
     z-index: 4;
     top: 0;
     height: 10vh;
+    background-color: #EEE;
+
 `;
 
 const SearchInput = styled.input`
@@ -33,12 +62,13 @@ const SearchInput = styled.input`
   width: 70%;
   height: 40px;
   font-size: 1.6rem;
-  margin-top: 8px;
   padding-left: 22px;
-      font-family: monospace !important;
-      text-align: right;
-    border-bottom: 1px solid #aaa;
+  font-family: monospace !important;
+  text-align: right;
+  border-bottom: 1px solid #aaa;
   font-family: sans-serif;
+  background-color: #EEE;
+  margin-top: 4px;
 
   transition: all 200ms ease-out;
 `
@@ -55,11 +85,10 @@ const SubmitArrow = styled.button`
   border: none;
   background: none;
   margin: 0 0.5rem;
-    margin-top: 8px;
   border-bottom: black;
   cursor: pointer;
   border-bottom: 1px solid rgba(0,0,0,0);
-  
+  margin-top: 4px;
 
   &:hover {
     border-bottom: 1px solid black;
@@ -72,16 +101,18 @@ const SubmitArrow = styled.button`
 `
 
 const TedVis = styled.svg`
+
   margin: 0;
   border-top: 1px solid rgba(0,0,0,0.1);
 
   circle {
     transform-origin: center center;
+    transition: fill 150ms ease-out;
   }
 
   circle:hover {
     
-    
+    fill: #E62A01;
   }
 `
 
@@ -95,14 +126,28 @@ const Legend = styled.div`
   padding: 0 0.5rem;
 `
 
+const InfoTooltip = styled.div`
+  position: absolute;
+  min-height: 80px;
+  background-color: white;
+  width: 200px;
+  box-shadow: 0 2px 34px 0 rgba(0,0,0,0.09);
+`
 
-class IndexPage extends React.Component {
+
+class IndexPage extends React.PureComponent {
   state = {
     tedData: [],
-    search: "",
-    talkSpeaker: "",
+    search: "applause",
     windowWidth: 1000,
-    windowHeight: 1000
+    windowHeight: 1000,
+    lineSpeaker: "",
+    lineText: "",
+    lineLink: "",
+    lineTime: "",
+    lineIndex: "",
+    posLeft: 0,
+    posRight: 0
   }
 
   dataLength = 1754;
@@ -136,8 +181,6 @@ class IndexPage extends React.Component {
     Promise.all(talkRequests).then(files => {
       const talks = [].concat(...files);
 
-      console.log(talks.length);
-
       scope.setState({
         tedData: talks
       })
@@ -146,15 +189,17 @@ class IndexPage extends React.Component {
 
   updateSearchTerm = (e) => {
     e.preventDefault();
+    let search = this.searchInput.value.toLowerCase();
 
-    this.fetchTedData(this.searchInput.value.toLowerCase());
+    this.fetchTedData(search);
+
+    this.setState({
+      imageMode: true,
+      search: search
+    })
 
     this.searchInput.blur()
     this.searchInput.value = "";
-
-    this.setState({
-      imageMode: true
-    })
   }
 
   calcAspectRatio = () => {
@@ -167,6 +212,26 @@ class IndexPage extends React.Component {
     })
   }
 
+  setTooltipInfo = (time, text, index) => {
+    let searchIndex = text.toLowerCase().indexOf(this.state.search);
+    console.log(searchIndex);
+    
+    let textSnippet = getClosestWord(text, searchIndex)
+    
+    if (this.state.lineIndex !== index) {
+      this.setState({
+        lineIndex: index,
+        lineText: textSnippet,
+        lineTime: time,
+      })
+    } else {
+      this.setState({
+        lineText: textSnippet,
+        lineTime: time
+      })
+    }
+  }
+
   componentDidMount() {
     this.fetchTedData();
     this.calcAspectRatio();
@@ -175,8 +240,13 @@ class IndexPage extends React.Component {
 
 
   render() {
+    const tooltipStyles = {
+      top: 0,
+      left: 0
+    }
+
     return (
-      <div>
+      <Container>
 
         <InputContainer onSubmit={this.updateSearchTerm}>
           <SearchInput
@@ -190,6 +260,11 @@ class IndexPage extends React.Component {
           </SubmitArrow>
         </InputContainer>
 
+        <InfoTooltip innerRef={el => this.tooltip = el}>
+          {this.state.lineTime}
+          <p>{this.state.lineText}</p>
+        </InfoTooltip>
+
         {/* <Legend>
           <p>Talk Start {this.state.talkSpeaker}</p>
         </Legend> */}
@@ -202,12 +277,17 @@ class IndexPage extends React.Component {
             let height = timeToMinutes(talk.lastLine);
 
             return (
-              <g key={i} transform={`translate(${this.state.windowWidth*2/this.state.tedData.length*i})`} fill="rgba(0, 50, 0, 0.6)">
+              <g key={i} transform={`translate(${this.state.windowWidth*2/this.state.tedData.length*i})`} fill="rgba(0,0,0, 0.2)">
                 <line x1="0" y1="0" y2="500" x2="0" stroke="rgba(0,0,0, 0)" strokeWidth="0.1" />
                 
-                {talk.foundLines.map((line,i) => 
+                {talk.foundLines.map(({ time, text },i) => 
                   <React.Fragment key={i}>
-                    <circle cy={(timeToMinutes(line) / height * this.state.windowHeight * 0.9) + 0} cx="0" r="2.5"/>
+                    <circle
+                      cy={(timeToMinutes(time) / height * (this.state.windowHeight * 0.9 - 15)) + 10} 
+                      cx="0" 
+                      r="4"
+                      onMouseEnter={() => this.setTooltipInfo(time, text, talk.index)}
+                    />
                   </React.Fragment>
                 )}
               </g>
@@ -218,7 +298,7 @@ class IndexPage extends React.Component {
         {/* <Legend>
           <p>Talk End</p>
         </Legend> */}
-      </div>
+      </Container>
     )
   }
 }

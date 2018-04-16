@@ -1,18 +1,10 @@
 import React from 'react'
 import Link from 'gatsby-link'
 import styled from 'styled-components';
+import Vis from '../components/Vis'
 
 const talkData = require('../assets/data/talk-data.json')
-console.log(talkData);
 
-
-
-function timeToMinutes(timeString) {
-  let time = timeString.split(':');
-  let minutes = (+time[0]) * 60 + (+time[1]);
-
-  return minutes;
-}
 
 function getClosestWord(str, pos) {
   // Perform type conversions.
@@ -100,21 +92,7 @@ const SubmitArrow = styled.button`
   }
 `
 
-const TedVis = styled.svg`
 
-  margin: 0;
-  border-top: 1px solid rgba(0,0,0,0.1);
-
-  circle {
-    transform-origin: center center;
-    transition: fill 150ms ease-out;
-  }
-
-  circle:hover {
-    
-    fill: #E62A01;
-  }
-`
 
 const Legend = styled.div`
   display: flex;
@@ -202,17 +180,9 @@ class IndexPage extends React.PureComponent {
     this.searchInput.value = "";
   }
 
-  calcAspectRatio = () => {
-    let width = window.innerWidth;
-    let height = window.innerHeight;
 
-    this.setState({
-      windowWidth: width,
-      windowHeight: height
-    })
-  }
 
-  setTooltipInfo = (time, text, index) => {
+  handleTooltip = (time, text, index) => {
     let searchIndex = text.toLowerCase().indexOf(this.state.search);
     console.log(searchIndex);
     
@@ -234,7 +204,6 @@ class IndexPage extends React.PureComponent {
 
   componentDidMount() {
     this.fetchTedData();
-    this.calcAspectRatio();
   }
 
 
@@ -265,35 +234,16 @@ class IndexPage extends React.PureComponent {
           <p>{this.state.lineText}</p>
         </InfoTooltip>
 
+        <Vis 
+          tedData={this.state.tedData} 
+          handleTooltip={this.handleTooltip}
+        />
+
         {/* <Legend>
           <p>Talk Start {this.state.talkSpeaker}</p>
         </Legend> */}
 
-        <TedVis xmlns="http://www.w3.org/2000/svg" viewBox={`0 0 ${this.state.windowWidth} ${this.state.windowHeight*0.9}`} preserveAspectRatio="xMinYMin meet">
-          {this.state.tedData.map((talk, i) => {
-            if (talk.foundLines.length <= 0)
-              return <g key={i}/>
 
-            let height = timeToMinutes(talk.lastLine);
-
-            return (
-              <g key={i} transform={`translate(${this.state.windowWidth*2/this.state.tedData.length*i})`} fill="rgba(0,0,0, 0.2)">
-                <line x1="0" y1="0" y2="500" x2="0" stroke="rgba(0,0,0, 0)" strokeWidth="0.1" />
-                
-                {talk.foundLines.map(({ time, text },i) => 
-                  <React.Fragment key={i}>
-                    <circle
-                      cy={(timeToMinutes(time) / height * (this.state.windowHeight * 0.9 - 15)) + 10} 
-                      cx="0" 
-                      r="4"
-                      onMouseEnter={() => this.setTooltipInfo(time, text, talk.index)}
-                    />
-                  </React.Fragment>
-                )}
-              </g>
-            )
-          })}
-        </TedVis>
 
         {/* <Legend>
           <p>Talk End</p>

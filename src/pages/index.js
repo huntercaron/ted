@@ -44,7 +44,6 @@ const InputContainer = styled.form`
     z-index: 4;
     top: 0;
     height: 10vh;
-    background-color: #EEE;
 
 `;
 
@@ -59,7 +58,7 @@ const SearchInput = styled.input`
   text-align: right;
   border-bottom: 1px solid #aaa;
   font-family: sans-serif;
-  background-color: #EEE;
+  background-color: transparent;
   margin-top: 4px;
 
   transition: all 200ms ease-out;
@@ -108,9 +107,31 @@ const InfoTooltip = styled.div`
   position: absolute;
   min-height: 80px;
   background-color: white;
-  width: 200px;
+  width: 280px;
   box-shadow: 0 2px 34px 0 rgba(0,0,0,0.09);
+
+
 `
+
+const TalkTitle = styled.p`
+  font-size: 1rem;
+  opacity: 0.4;
+`;
+
+const Time = styled.p`
+  position: absolute;
+  top: 0.25rem;
+  right: 1rem;
+  font-size: 1rem;
+  opacity: 0.4;
+`;
+
+const PreviewText = styled.p`
+  line-height: 1.3;
+  margin: 1.5rem;
+  margin-top: 2.5rem;
+  font-size: 1.2rem;
+`;
 
 
 class IndexPage extends React.PureComponent {
@@ -120,12 +141,14 @@ class IndexPage extends React.PureComponent {
     windowWidth: 1000,
     windowHeight: 1000,
     lineSpeaker: "",
+    lineTitle: "",
     lineText: "",
     lineLink: "",
     lineTime: "",
     lineIndex: "",
-    posLeft: 0,
-    posRight: 0
+    tooltipLeft: 0,
+    tooltipRight: 0,
+    tooltipOpen: false
   }
 
   dataLength = 1754;
@@ -182,24 +205,29 @@ class IndexPage extends React.PureComponent {
 
 
 
-  handleTooltip = (time, text, index) => {
+  handleTooltip = (e, time, text, index) => {
+    let bounds = e.target.getBoundingClientRect();
+    
     let searchIndex = text.toLowerCase().indexOf(this.state.search);
     console.log(searchIndex);
     
     let textSnippet = getClosestWord(text, searchIndex)
     
-    if (this.state.lineIndex !== index) {
-      this.setState({
-        lineIndex: index,
-        lineText: textSnippet,
-        lineTime: time,
-      })
-    } else {
-      this.setState({
-        lineText: textSnippet,
-        lineTime: time
-      })
-    }
+    this.setState({
+      lineIndex: index,
+      lineText: textSnippet,
+      lineTime: time,
+      tooltipOpen: true,
+      tooltipLeft: bounds.left+bounds.height,
+      tooltipTop: bounds.top+bounds.height
+    })
+  }
+
+  closeTooltip = () => {
+    console.log("fuck")
+    this.setState({
+      tooltipOpen: false
+    })
   }
 
   componentDidMount() {
@@ -210,8 +238,9 @@ class IndexPage extends React.PureComponent {
 
   render() {
     const tooltipStyles = {
-      top: 0,
-      left: 0
+      top: this.state.tooltipTop,
+      left: this.state.tooltipLeft,
+      display: this.state.tooltipOpen ? "block" : "none"
     }
 
     return (
@@ -229,14 +258,19 @@ class IndexPage extends React.PureComponent {
           </SubmitArrow>
         </InputContainer>
 
-        <InfoTooltip innerRef={el => this.tooltip = el}>
-          {this.state.lineTime}
-          <p>{this.state.lineText}</p>
+        <InfoTooltip 
+          innerRef={el => this.tooltip = el}
+          style={tooltipStyles}
+        >
+          <Time>{this.state.lineTime}</Time>
+          <TalkTitle>{this.state.lineTitle}</TalkTitle>
+          <PreviewText>{this.state.lineText}</PreviewText>
         </InfoTooltip>
 
         <Vis 
           tedData={this.state.tedData} 
           handleTooltip={this.handleTooltip}
+          handleMouseLeave={this.closeTooltip}
         />
 
         {/* <Legend>

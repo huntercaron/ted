@@ -73,7 +73,8 @@ export default class Vis extends React.Component {
                     cy={(timeToMinutes(time) / height * (this.state.windowHeight * 0.9 - 15)) + 10}
                     cx="0"
                     r="4"
-                    onMouseEnter={() => this.props.handleTooltip(time, text, talk.index)}
+                    onMouseEnter={(e) => this.props.handleTooltip(e, time, text, talk.index)}
+                    onMouseLeave={() => this.props.handleMouseLeave()}
                   />
                 </React.Fragment>
               )}

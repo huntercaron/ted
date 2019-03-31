@@ -119,31 +119,44 @@ const InfoTooltip = styled.div`
   min-height: 80px;
   background-color: white;
   width: 280px;
-  box-shadow: 0 2px 34px 0 rgba(0,0,0,0.09);
+  box-shadow: 0 2px 34px 0 rgba(0,0,0,0.09),
+    0 2px 6px 0 rgba(0,0,0,0.1);
+  border-radius: 0px 6px 6px 6px;
+  padding: 0;
 
+`
 
+const MetaContainer = styled.div`
+  width: 100%;
+  display: flex;
+  height: 30px;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 0.25rem 1.5rem;
+  background-color: #f6f6f6;
+  /* text-transform: uppercase; */
 `
 
 const TalkTitle = styled.p`
   font-size: 1rem;
   white-space: nowrap;
+  /* font-family: "SFUIDisplay-Bold"; */
+  /* font-weight: bold; */
+  
   overflow: hidden;
   text-overflow: ellipsis;
-  margin: 0.5rem 1.5rem;
-  width: 75%;
 `;
 
 const Time = styled.p`
-  position: absolute;
-  top: 0.5rem;
-  right: 1rem;
   font-size: 1rem;
+  padding-left: 1.5rem;
   opacity: 0.4;
 `;
 
 const PreviewText = styled.p`
   line-height: 1.3;
-  margin: 1.5rem;
+  margin: 1rem 1.4rem;
   font-size: 1.2rem;
 `;
 
@@ -179,6 +192,8 @@ class IndexPage extends React.PureComponent {
       const baseUrl = (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') ?
         "http://localhost:9000/" :
         "http://tedtalk.directory/.netlify/functions/";
+
+        // const baseUrl = "http://tedtalk.directory/.netlify/functions/";
 
       fetch(baseUrl + url)
         .then(function (response) {
@@ -288,13 +303,18 @@ class IndexPage extends React.PureComponent {
         <InfoTooltip 
           innerRef={el => this.tooltip = el}
           style={tooltipStyles}
-        >
-          <Time>{this.state.lineTime}</Time>
-          <TalkTitle>{this.state.lineTitle}</TalkTitle>
+        > 
+          <MetaContainer>
+            <TalkTitle>{this.state.lineTitle}</TalkTitle>
+            <Time>{this.state.lineTime}</Time>
+          </MetaContainer>
           <PreviewText>{this.state.lineText}</PreviewText>
         </InfoTooltip>
 
-        <a href={this.state.lineLink + "#t-" + timeToMilliseconds(this.state.lineTime)} target="_blank">
+        <a 
+          href={this.state.tooltipOpen ? (this.state.lineLink + "#t-" + timeToMilliseconds(this.state.lineTime)) : "#"} 
+          target={this.state.tooltipOpen ? "_blank" : ""}
+        >
           <Vis 
             tedData={this.state.tedData} 
             talkData={talkData}

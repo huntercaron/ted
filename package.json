@@ -27,6 +27,7 @@
     "functions": "netlify-lambda serve /functions-source"
   },
   "resolutions": {
+    "upath": "1.1.2",
     "gatsby-plugin-react-next/react": "^16.3.0"
   },
   "devDependencies": {

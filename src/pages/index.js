@@ -129,26 +129,28 @@ const InfoTooltip = styled.div`
 const MetaContainer = styled.div`
   width: 100%;
   display: flex;
-  height: 30px;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 
-  padding: 0.25rem 1.5rem;
+  padding: 1rem 1.5rem;
   background-color: #f6f6f6;
-  /* text-transform: uppercase; */
+  text-transform: uppercase;
 `
 
 const TalkTitle = styled.p`
   font-size: 1rem;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   /* font-family: "SFUIDisplay-Bold"; */
-  /* font-weight: bold; */
-  
-  overflow: hidden;
-  text-overflow: ellipsis;
+  /* font-weight: 700; */
+  line-height: 1.2;
+  opacity: 0.9;
+  letter-spacing: 0.3px;
+  /* overflow: hidden; */
+  /* text-overflow: ellipsis; */
 `;
 
 const Time = styled.p`
+line-height: 1.2;
   font-size: 1rem;
   padding-left: 1.5rem;
   opacity: 0.4;

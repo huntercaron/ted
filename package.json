@@ -4,16 +4,18 @@
   "version": "1.0.0",
   "author": "Kyle Mathews <mathews.kyle@gmail.com>",
   "dependencies": {
-    "d3": "^5.0.0",
-    "gatsby": "^1.9.241",
-    "gatsby-link": "^1.6.39",
-    "gatsby-plugin-react-helmet": "^2.0.8",
-    "gatsby-plugin-react-next": "^1.0.11",
-    "gatsby-plugin-styled-components": "^2.0.11",
-    "modern-normalize": "^0.4.0",
+    "d3": "^5.15.0",
+    "gatsby": "^2.19.17",
+    "gatsby-link": "^2.2.29",
+    "gatsby-plugin-layout": "^1.1.22",
+    "gatsby-plugin-react-helmet": "^3.1.22",
+    "gatsby-plugin-styled-components": "^3.1.19",
+    "modern-normalize": "^0.6.0",
     "netlify-lambda": "huntercaron/netlify-lambda",
-    "react-helmet": "^5.2.0",
-    "styled-components": "^3.2.5"
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
+    "react-helmet": "^5.2.1",
+    "styled-components": "4.4.1"
   },
   "keywords": [
     "gatsby"
@@ -21,7 +23,7 @@
   "license": "MIT",
   "scripts": {
     "build": "gatsby build",
-    "develop": "gatsby develop -H 0.0.0.0",
+    "develop": "gatsby develop",
     "format": "prettier --write 'src/**/*.js'",
     "test": "echo \"Error: no test specified\" && exit 1",
     "functions": "netlify-lambda serve /functions-source"
@@ -31,6 +33,6 @@
     "gatsby-plugin-react-next/react": "^16.3.0"
   },
   "devDependencies": {
-    "prettier": "^1.11.1"
+    "prettier": "^1.19.1"
   }
 }
